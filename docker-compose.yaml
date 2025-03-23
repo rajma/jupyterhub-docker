@@ -1,0 +1,22 @@
+
+services:
+  jupyterhub:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jupyterhub-config/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+      - jupyterhub-data:/srv/jupyterhub/  #  Make sure this directory exists and is writable
+    environment:
+      JUPYTERHUB_COOKIE_SECRET: "${JUPYTERHUB_COOKIE_SECRET}"
+      # No need to precreate users for NativeAuthenticator
+    networks:
+      - jupyterhub-network
+
+networks:
+  jupyterhub-network:
+    name: jupyterhub-network
+
+volumes:
+  jupyterhub-data: # Declare the volume
